@@ -6,7 +6,7 @@ export default function ProductCard({ product }) {
   const navigate = useNavigate();
 
   return (
-    <article className="product-card" role="button" tabIndex={0}>
+    <article className="product-card" role="button" tabIndex={0} onClick={() => navigate(`/product/${product.id}`)}>
       <div className="product-card__image-wrap">
         <img src={product.thumbnail} alt={product.title} loading="lazy" />
       </div>

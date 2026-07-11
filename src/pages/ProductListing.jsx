@@ -9,12 +9,13 @@ import {
   fetchProductsForClientFilter,
 } from "../api/products.js";
 import Pagination from "../components/Pagination.jsx";
+import Header from "../components/Header.jsx";
 
 const PAGE_SIZE = 8;
 
 export default function ProductListing() {
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const search = searchParams.get("search") || "";
   const category = searchParams.get("category") || "";
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
@@ -77,6 +78,8 @@ export default function ProductListing() {
 
   const filteredProducts = useMemo(() => {
     return allProducts.filter((p) => {
+      if (search && !p.title.toLowerCase().includes(search.toLowerCase()))
+        return false;
       if (
         minPrice !== null &&
         minPrice !== undefined &&
@@ -96,7 +99,7 @@ export default function ProductListing() {
 
       return true;
     });
-  }, [allProducts, minPrice, maxPrice, selectedBrands]);
+  }, [allProducts, search, minPrice, maxPrice, selectedBrands]);
 
   const totalPages = Math.max(
     1,
@@ -126,8 +129,12 @@ export default function ProductListing() {
     updateParams({ page: newPage });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
+  function handleSearchChange(value) {
+    updateParams({ search: value }, true);
+  }
   return (
     <div className="page">
+      <Header searchTerm={search} onSearchChange={handleSearchChange} />
       <div className="layout">
         <Filters
           categories={categories}

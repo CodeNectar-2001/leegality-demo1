@@ -19,5 +19,7 @@ export async function fetchProductsForClientFilter({ category = '' } = {}) {
 export async function fetchCategories() {
   return request(`${BASE_URL}/products/categories`)
 }
-
+export async function fetchProductById(id) {
+  return request(`${BASE_URL}/products/${id}`)
+}
 

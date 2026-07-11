@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import StarRating from "./StarRating";
 
 export default function ProductCard({ product }) {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ export default function ProductCard({ product }) {
       <div className="product-card__body">
         <h3 className="product-card__title">{product.title}</h3>
         <div className="product-card__price">${product.price}</div>
+         <StarRating rating={product.rating} />
       </div>
     </article>
   );

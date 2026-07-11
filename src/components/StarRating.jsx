@@ -1,3 +1,4 @@
+import React from "react";
 export default function StarRating({ rating = 0 }) {
   const rounded = Math.round(rating)
   const stars = Array.from({ length: 5 }, (_, i) => i < rounded)

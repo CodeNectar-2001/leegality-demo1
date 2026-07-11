@@ -15,6 +15,10 @@ export default function ProductListing() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const category = searchParams.get("category") || "";
+  const minPrice = searchParams.get("minPrice");
+  const maxPrice = searchParams.get("maxPrice");
+  const brandsParam = searchParams.get("brands") || "";
+  const selectedBrands = brandsParam ? brandsParam.split(",") : [];
 
   const page = Number(searchParams.get("page") || "1");
 
@@ -72,9 +76,26 @@ export default function ProductListing() {
 
   const filteredProducts = useMemo(() => {
     return allProducts.filter((p) => {
+      if (
+        minPrice !== null &&
+        minPrice !== undefined &&
+        minPrice !== "" &&
+        p.price < Number(minPrice)
+      )
+        return false;
+      if (
+        maxPrice !== null &&
+        maxPrice !== undefined &&
+        maxPrice !== "" &&
+        p.price > Number(maxPrice)
+      )
+        return false;
+      if (selectedBrands.length > 0 && !selectedBrands.includes(p.brand))
+        return false;
+
       return true;
     });
-  }, [allProducts]);
+  }, [allProducts, minPrice, maxPrice, selectedBrands]);
 
   const totalPages = Math.max(
     1,
@@ -89,6 +110,16 @@ export default function ProductListing() {
   function handleCategoryChange(slug) {
     updateParams({ category: slug }, true);
   }
+  function handleBrandToggle(brand) {
+    const next = selectedBrands.includes(brand)
+      ? selectedBrands.filter((b) => b !== brand)
+      : [...selectedBrands, brand];
+    updateParams({ brands: next.join(",") }, true);
+  }
+
+  function handlePriceApply({ min, max }) {
+    updateParams({ minPrice: min ?? "", maxPrice: max ?? "" }, true);
+  }
 
   return (
     <div className="page">
@@ -97,6 +128,11 @@ export default function ProductListing() {
           categories={categories}
           selectedCategory={category}
           onCategoryChange={handleCategoryChange}
+          brands={brands}
+          selectedBrands={selectedBrands}
+          onBrandToggle={handleBrandToggle}
+          priceRange={{ min: minPrice, max: maxPrice }}
+          onPriceApply={handlePriceApply}
         />
 
         <main className="listing">

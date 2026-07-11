@@ -8,6 +8,7 @@ import {
   fetchCategories,
   fetchProductsForClientFilter,
 } from "../api/products.js";
+import Pagination from "../components/Pagination.jsx";
 
 const PAGE_SIZE = 8;
 
@@ -121,6 +122,10 @@ export default function ProductListing() {
     updateParams({ minPrice: min ?? "", maxPrice: max ?? "" }, true);
   }
 
+  function handlePageChange(newPage) {
+    updateParams({ page: newPage });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
   return (
     <div className="page">
       <div className="layout">
@@ -168,6 +173,11 @@ export default function ProductListing() {
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
+              <Pagination
+                currentPage={safePage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
             </>
           )}
         </main>

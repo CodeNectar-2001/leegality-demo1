@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom'
 
-export default function Header({ searchTerm, onSearchChange }) {
+export default function Header({ searchTerm, onSearchChange, onMenuClick = () => {}  }) {
   const navigate = useNavigate()
 
   function handleSubmit(e) {
@@ -12,7 +12,7 @@ export default function Header({ searchTerm, onSearchChange }) {
   return (
     <header className="header">
       <div className="header__inner">
-        <button className="icon-btn" aria-label="Menu">☰</button>
+        <button className="icon-btn" aria-label="Toggle filters" onClick={onMenuClick}>☰</button>
 
         <form className="header__search" onSubmit={handleSubmit} role="search">
           <span className="header__search-icon">🔍</span>

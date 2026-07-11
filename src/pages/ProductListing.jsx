@@ -30,6 +30,7 @@ export default function ProductListing() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [retryKey, setRetryKey] = useState(0);
+  const [filtersOpen, setFiltersOpen] = useState(true);
 
   function updateParams(updates, resetPage = false) {
     const next = new URLSearchParams(searchParams);
@@ -40,6 +41,7 @@ export default function ProductListing() {
         next.set(key, value);
       }
     });
+    if (resetPage) next.set("page", "1");
     setSearchParams(next);
   }
 
@@ -135,18 +137,24 @@ export default function ProductListing() {
   }
   return (
     <div className="page">
-      <Header searchTerm={search} onSearchChange={handleSearchChange} />
-      <div className="layout">
-        <Filters
-          categories={categories}
-          selectedCategory={category}
-          onCategoryChange={handleCategoryChange}
-          brands={brands}
-          selectedBrands={selectedBrands}
-          onBrandToggle={handleBrandToggle}
-          priceRange={{ min: minPrice, max: maxPrice }}
-          onPriceApply={handlePriceApply}
-        />
+      <Header
+        searchTerm={search}
+        onSearchChange={handleSearchChange}
+        onMenuClick={() => setFiltersOpen((open) => !open)}
+      />
+      <div className={filtersOpen ? "layout" : "layout layout--collapsed"}>
+        {filtersOpen && (
+          <Filters
+            categories={categories}
+            selectedCategory={category}
+            onCategoryChange={handleCategoryChange}
+            brands={brands}
+            selectedBrands={selectedBrands}
+            onBrandToggle={handleBrandToggle}
+            priceRange={{ min: minPrice, max: maxPrice }}
+            onPriceApply={handlePriceApply}
+          />
+        )}
 
         <main className="listing">
           {loading && (
